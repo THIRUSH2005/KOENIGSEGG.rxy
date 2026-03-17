@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050505;
+  --secondary: #0A0A0C;
+  --foreground: #ffffff;
+  --accent-gold: #D4AF37;
+  --accent-cyan: #00E5FF;
+  --accent-red: #FF3B30;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-secondary: var(--secondary);
+  --color-foreground: var(--foreground);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-red: var(--accent-red);
+  
+  --font-sans: "Inter", "SF Pro Display", "Neue Haas Grotesk", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* High-Fidelity Image Rendering */
+canvas {
+  image-rendering: auto; /* Let the browser smooth out low-res pixels instead of making them blocky */
+  filter: 
+    contrast(1.05) 
+    saturate(1.1);
+}
+
+/* Animated Blueprint Grid */
+.blueprint-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 100px 100px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+}
+
+.blueprint-grid-glow {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(0, 229, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.08) 1px, transparent 1px);
+  background-size: 400px 400px;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  animation: grid-pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes grid-pulse {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.8; }
+}
+
+.edge-blur {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  mask-image: radial-gradient(ellipse at center, transparent 30%, black 100%);
+  -webkit-mask-image: radial-gradient(ellipse at center, transparent 30%, black 100%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.layered-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: 
+    linear-gradient(to bottom, rgba(5, 5, 5, 0.95) 0%, transparent 15%, transparent 85%, rgba(5, 5, 5, 0.95) 100%),
+    linear-gradient(to right, rgba(5, 5, 5, 0.8) 0%, transparent 20%, transparent 80%, rgba(5, 5, 5, 0.8) 100%);
+  z-index: 5;
+}
+
+.central-spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 229, 255, 0.1) 0%, transparent 55%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5; /* Above canvas but below UI */
+  opacity: 0.12; /* Slightly more visible to mask banding */
+  pointer-events: none;
+  background-image: url("https://res.cloudinary.com/dyd911kmh/image/upload/v1640050415/noise_v1_z1zj1z.png"); /* High-quality film grain */
+  mix-blend-mode: overlay;
+}
+
+/* Subtle scanlines for engineering feel and masking */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+  background-size: 100% 3px, 3px 100%;
+  opacity: 0.2;
+}
+
+/* UI Fixes */
+.nav-link {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-family: inherit; /* Maintain consistency with brand font */
+}
+
+.heading-xl {
+  font-size: clamp(4rem, 15vw, 12rem);
+  line-height: 0.9;
+  font-weight: 900;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.content-card {
+  max-width: 600px;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+.btn-premium {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.85rem 2.5rem;
+  border-radius: 9999px;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.btn-premium:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(255, 255, 255, 0.15);
+}
+
+.shadow-glow {
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
