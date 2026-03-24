@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, MotionValue, useMotionValueEvent } from "framer-motion";
+import { HOSTED_BACKGROUNDS } from "./hostedImages";
 
 interface CanvasSequenceProps {
   progress: MotionValue<number>;
@@ -15,27 +16,44 @@ const CanvasSequence: React.FC<CanvasSequenceProps> = ({ progress, bgColor, fram
   const [loadedCount, setLoadedCount] = useState(0);
   const [isReady, setIsReady] = useState(false);
 
-  // Preload images from the /background/ directory
+  // Preload images from the hosted array (if provided), or fallback to local files
   useEffect(() => {
     const loadedImages: HTMLImageElement[] = [];
     let loaded = 0;
+    
+    // Auto-detect whether to use HOSTED links or default to frameCount local files
+    const totalFrames = HOSTED_BACKGROUNDS.length > 0 ? HOSTED_BACKGROUNDS.length : frameCount;
 
-    for (let i = 1; i <= frameCount; i++) {
+    for (let i = 0; i < totalFrames; i++) {
       const img = new Image();
-      const frameIndex = i.toString().padStart(3, "0");
-      // Use the 'background' folder as requested
-      img.src = `/background/ezgif-frame-${frameIndex}.jpg`;
+      
+      // Select the URL to load mapping 1-to-1 with external links
+      // Falls back to standard naming sequence if array is empty (for safety)
+      let srcUrl = HOSTED_BACKGROUNDS.length > 0
+        ? HOSTED_BACKGROUNDS[i]
+        : `/background/ezgif-frame-${(i + 1).toString().padStart(3, "0")}.jpg`;
+
+      // Auto-fix: Convert FreeImage.host HTML viewer links into raw Direct Image URLs!
+      if (srcUrl && srcUrl.includes("freeimage.host/i/")) {
+        const imageId = srcUrl.split("/i/")[1];
+        srcUrl = `https://iili.io/${imageId}.jpg`;
+      }
+
+      img.src = srcUrl;
+      
       img.onload = () => {
         loaded++;
         setLoadedCount(loaded);
-        if (loaded === frameCount) {
+        if (loaded === totalFrames) {
           setImages(loadedImages);
           setIsReady(true);
         }
       };
+      
       img.onerror = () => {
-        console.error(`Failed to load frame: /background/ezgif-frame-${frameIndex}.jpg`);
+        console.error(`Failed to load frame: ${srcUrl}`);
       };
+      
       loadedImages.push(img);
     }
   }, [frameCount]);
@@ -48,8 +66,8 @@ const CanvasSequence: React.FC<CanvasSequenceProps> = ({ progress, bgColor, fram
     if (!ctx) return;
 
     const frameIndex = Math.min(
-      frameCount - 1,
-      Math.floor(val * (frameCount - 1))
+      images.length - 1,
+      Math.floor(val * (images.length - 1))
     );
     
     const img = images[frameIndex];
